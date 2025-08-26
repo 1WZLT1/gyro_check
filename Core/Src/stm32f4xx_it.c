@@ -51,10 +51,25 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#define F50X_X_PPM 98098335
+#define TIM_TRANSMIT_HZ 1000
+
+typedef struct
+{ 
+	int32_t Dg_raw;
+	int16_t Temp_raw;
+	float Dg;
+	int16_t Temp;
+}IXZ_F50X_t;
+
+int cnt = 0;
+uint16_t recv_len = 0;
+IXZ_F50X_t IXZ_F50X_X;
 
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern TIM_HandleTypeDef htim2;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart1_tx;
 extern UART_HandleTypeDef huart1;
@@ -201,24 +216,30 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles TIM2 global interrupt.
+  */
+int s_cnt   = 0;
+int s       = 0;
+uint8_t rec = 0x00;
+void TIM2_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM2_IRQn 0 */
+	if(s_cnt++ == 1000)
+	{
+		s_cnt = 0;
+		
+		HAL_UART_Transmit_DMA(&huart1,&rec,1);
+	}
+  /* USER CODE END TIM2_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim2);
+  /* USER CODE BEGIN TIM2_IRQn 1 */
+
+  /* USER CODE END TIM2_IRQn 1 */
+}
+
+/**
   * @brief This function handles USART1 global interrupt.
   */
-#define F50X_X_PPM 98098335
-#define TIM_TRANSMIT_HZ 1000
-
-
-typedef struct
-{ 
-	int32_t Dg_raw;
-	int16_t Temp_raw;
-	float Dg;
-	int16_t Temp;
-}IXZ_F50X_t;
-
-int cnt = 0;
-uint16_t recv_len = 0;
-IXZ_F50X_t IXZ_F50X_X;
-
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
@@ -232,11 +253,11 @@ void USART1_IRQHandler(void)
 		IXZ_F50X_X.Dg_raw |= (unsigned int)(rxBuf[4] & 0x7f) << 21;
 		IXZ_F50X_X.Dg_raw |= (unsigned int)(rxBuf[5] & 0x0f) << 28;
 		
-		//ºÏ³ÉÎÂ¶ÈÊý¾Ý
+		//ï¿½Ï³ï¿½ï¿½Â¶ï¿½ï¿½ï¿½ï¿½ï¿½
 		IXZ_F50X_X.Temp_raw  =  rxBuf[7] & 0x7f;
 		IXZ_F50X_X.Temp_raw |= (unsigned short)(rxBuf[8] & 0x7f) << 7;   
 		
-		//Êý¾Ý±ÈÀý×ª»»
+		//ï¿½ï¿½ï¿½Ý±ï¿½ï¿½ï¿½×ªï¿½ï¿½
 		IXZ_F50X_X.Dg		= 	((float)IXZ_F50X_X.Dg_raw / (F50X_X_PPM/TIM_TRANSMIT_HZ)); 
 		IXZ_F50X_X.Temp =		IXZ_F50X_X.Temp_raw * 0.0625;
 		

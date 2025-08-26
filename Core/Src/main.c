@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "dma.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -56,13 +57,13 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint8_t rxBuf[10];   // ½ÓÊÕ»º´æ
+uint8_t rxBuf[10];   // ï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½
 /* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
   * @retval int
-  */	
+  */
 int main(void)
 {
 
@@ -90,9 +91,12 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USART1_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 	HAL_UART_Receive_DMA(&huart1, rxBuf, sizeof(rxBuf));
 	__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
+	
+	HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -101,7 +105,7 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */	
+    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
