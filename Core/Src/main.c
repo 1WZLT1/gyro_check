@@ -56,13 +56,13 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+uint8_t rxBuf[10];   // Ω” ’ª∫¥Ê
 /* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
   * @retval int
-  */
+  */	
 int main(void)
 {
 
@@ -91,7 +91,8 @@ int main(void)
   MX_DMA_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+	HAL_UART_Receive_DMA(&huart1, rxBuf, sizeof(rxBuf));
+	__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,9 +101,7 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-		
-		
+    /* USER CODE BEGIN 3 */	
   }
   /* USER CODE END 3 */
 }

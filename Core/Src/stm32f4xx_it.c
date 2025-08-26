@@ -203,10 +203,46 @@ void SysTick_Handler(void)
 /**
   * @brief This function handles USART1 global interrupt.
   */
+#define F50X_X_PPM 98098335
+#define TIM_TRANSMIT_HZ 1000
+
+
+typedef struct
+{ 
+	int32_t Dg_raw;
+	int16_t Temp_raw;
+	float Dg;
+	int16_t Temp;
+}IXZ_F50X_t;
+
+int cnt = 0;
+uint16_t recv_len = 0;
+IXZ_F50X_t IXZ_F50X_X;
+
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-
+  if(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) != RESET)
+  {
+		recv_len = __HAL_DMA_GET_COUNTER(huart1.hdmarx);
+		
+		IXZ_F50X_X.Dg_raw = rxBuf[1] & 0x7f;
+		IXZ_F50X_X.Dg_raw |= (unsigned int)(rxBuf[2] & 0x7f) << 7;
+		IXZ_F50X_X.Dg_raw |= (unsigned int)(rxBuf[3] & 0x7f) << 14;
+		IXZ_F50X_X.Dg_raw |= (unsigned int)(rxBuf[4] & 0x7f) << 21;
+		IXZ_F50X_X.Dg_raw |= (unsigned int)(rxBuf[5] & 0x0f) << 28;
+		
+		//合成温度数据
+		IXZ_F50X_X.Temp_raw  =  rxBuf[7] & 0x7f;
+		IXZ_F50X_X.Temp_raw |= (unsigned short)(rxBuf[8] & 0x7f) << 7;   
+		
+		//数据比例转换
+		IXZ_F50X_X.Dg		= 	((float)IXZ_F50X_X.Dg_raw / (F50X_X_PPM/TIM_TRANSMIT_HZ)); 
+		IXZ_F50X_X.Temp =		IXZ_F50X_X.Temp_raw * 0.0625;
+		
+		
+		__HAL_UART_CLEAR_IDLEFLAG(&huart1);
+	}
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
