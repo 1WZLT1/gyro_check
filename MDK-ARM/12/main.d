@@ -28,10 +28,16 @@
 12\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
 12\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 12\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+12\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
 12\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 12\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 12\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 12\main.o: ../Core/Inc/dma.h
+12\main.o: ../Core/Inc/spi.h
 12\main.o: ../Core/Inc/tim.h
 12\main.o: ../Core/Inc/usart.h
 12\main.o: ../Core/Inc/gpio.h
+12\main.o: ../Hardware/A04_spi.h
+12\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+12\main.o: ../Hardware/ds_18b20.h
+12\main.o: ../Hardware/hal_delay.h

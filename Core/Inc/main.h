@@ -57,9 +57,18 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define B20_DQ_Pin GPIO_PIN_11
+#define B20_DQ_GPIO_Port GPIOA
+#define A04_RESET_Pin GPIO_PIN_2
+#define A04_RESET_GPIO_Port GPIOC
+#define A04_CS_Pin GPIO_PIN_12
+#define A04_CS_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 extern uint8_t rxBuf[10];
+extern uint8_t rxBuf_1[10];
+extern uint8_t rxBuf_2[10];
+extern float   tempreature;	
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
